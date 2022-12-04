@@ -22,8 +22,10 @@ jobs:
       PACKAGENAME: valgrind-3.17.0-android
     steps:
     - uses: actions/checkout@v2
-    - name: ndk-fix-debug
-      run: sed -i -e '/^  -g$/d' $ANDROID_HOME/ndk-bundle/build/cmake/android.toolchain.cmake
+    # - name: ndk-fix-debug
+      # run: sed -i -e '/^  -g$/d' $ANDROID_HOME/ndk-bundle/build/cmake/android.toolchain.cmake
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
     - name: valgrind-source
       run: |
         wget -q https://sourceware.org/pub/valgrind/valgrind-${{ env.VALGRIND_VERSION }}.tar.bz2
