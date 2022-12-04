@@ -31,24 +31,24 @@ jobs:
         cd valgrind-${{ env.VALGRIND_VERSION }}
         patch -p1 -i ../valgrind-3.16.1-ndk-r19-minimal_setjmp.patch
         patch -p1 -i ../valgrind-3.16.1-fix-build-new-ndk.patch
-    - name: build-arm64-v8a
+    - name: build-x86_64
       run: |
         cd valgrind-${{ env.VALGRIND_VERSION }}
 
-        export AR=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-ar
-        export LD=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-ld
+        export AR=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ar
+        export LD=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ld
         export CC=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang
 
-        export CPPFLAGS="-O3 --target=aarch64-none-linux-android21 --gcc-toolchain=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
-        export CFLAGS="-O3 --target=aarch64-none-linux-android21 --gcc-toolchain=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
+        export CPPFLAGS="-O3 --target=x86_64-none-linux-android21 --gcc-toolchain=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
+        export CFLAGS="-O3 --target=x86_64-none-linux-android21 --gcc-toolchain=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
 
-        ./configure --prefix=/data/local/tmp/valgrind --host=aarch64-unknown-linux --target=aarch64-unknown-linux --with-tmpdir=/data/local/tmp
+        ./configure --prefix=/data/local/tmp/valgrind --host=x86_64-unknown-linux --target=x86_64-unknown-linux --with-tmpdir=/data/local/tmp
         make -j2
         make install DESTDIR=`pwd`/install
     - name: strip-debug
       run: |
         cd valgrind-${{ env.VALGRIND_VERSION }}/install
-        find . -type f | xargs -i sh -c "$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-strip -g {} || true"
+        find . -type f | xargs -i sh -c "$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-strip -g {} || true"
     - name: package
       run: |
         mkdir ${{ env.PACKAGENAME }}
